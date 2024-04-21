@@ -1,0 +1,24 @@
+.next-btn {
+    display: flex;
+    align-items: center;
+    height: 50px;
+    padding-left: 30px;
+    padding-right: 10px;
+    width: 130px;
+    transition: all 0.3s ease;
+    background-image: linear-gradient(45deg, rgb(179, 79, 166), rgb(0, 36, 155));
+    border-radius: 30px;
+}
+
+#btn-arrow {
+    margin-left: 10px;
+    transition: 0.2s ease-in;
+}
+
+.next-btn:hover #btn-arrow {
+    margin-left: 17px;
+}
+
+.next-btn:hover {
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}

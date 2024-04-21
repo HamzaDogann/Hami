@@ -1,0 +1,73 @@
+.generations-button,
+.menu-hami-logo {
+    opacity: 1;
+    animation: SlowlyMenuAni 1.2s ease;
+}
+
+@keyframes SlowlyMenuAni {
+    0% {
+        opacity: 0;
+    }
+
+    80% {
+        opacity: 0;
+    }
+
+    100% {
+    
+        opacity: 1;
+    }
+}
+
+
+.menu-button-design {
+    width: 300px;
+    height: 190px;
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-top: 10px;
+    font-size: 24px;
+    border-radius: 18px;
+    background-size: 100%;
+    cursor: pointer;
+    z-index: 3;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.menu-button-design:hover {
+    transform: scale(1.03);
+    transition: all 0.2s ease;
+    background-size: 117%;
+}
+
+.menu-button-design h1 {
+    background-color: rgba(40, 40, 40, 0.319);
+    padding: 3px;
+    width: 90%;
+    border-radius: 5px;
+    color: white;
+}
+
+
+
+/*  Media Screen */
+
+@media (min-width: 300px) {
+    .generations-button {
+        display: flex;
+        flex-direction: column;
+        margin-top: 1.75rem;
+    }
+}
+
+@media (min-width: 660px) {
+    .generations-button {
+        flex-direction: row;
+    }
+}

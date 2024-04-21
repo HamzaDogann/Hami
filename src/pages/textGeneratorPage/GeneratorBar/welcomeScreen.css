@@ -1,0 +1,49 @@
+.cards {
+    display: flex;
+    flex-direction: column;
+    float: left;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.card-btn {
+    display: flex;
+    justify-items: center;
+    align-items: center;
+    width: 60%;
+    border-radius: 5px;
+    padding-left: 10px;
+    padding-right: 5px;
+    margin-top: 15px;
+    height: 60px;
+    text-align: left;
+    transition: transform 0.1s ease;
+}
+
+.card-btn:hover {
+    transform: scale(1.02);
+}
+
+.you-can-ask-title {
+    font-size: 30px;
+}
+
+@media (min-width: 780px) and (max-width: 1300px) {
+    .card-btn {
+      width: 90%;
+
+    }
+  }
+
+@media (max-width: 700px) {
+    .card-btn {
+        width: 100%;
+        font-size: 13px;
+        height: 50px;
+    }
+
+    .you-can-ask-title {
+        font-size: 18px;
+        text-align: center;
+    }
+}

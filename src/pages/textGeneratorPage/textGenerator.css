@@ -1,0 +1,478 @@
+/* Sidebar Styles */
+
+.smooth-transitions {
+    transition: 0.2s background-color;
+}
+
+.new-chat-btn {
+    background: linear-gradient(45deg, #4867c5, #6a0783);
+    border-radius: 3px;
+    padding: 8px 16px 8px 16px;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    cursor: pointer;
+    z-index: 20;
+}
+
+.new-chat-btn:hover {
+    transform: scale(1.02);
+
+}
+
+.favorite-bar-animation {
+    opacity: 1;
+    animation: favorite-bar-ani 4s ease-in;
+}
+
+@keyframes favorite-bar-ani {
+    0% {
+        opacity: 0;
+    }
+
+    90% {
+        opacity: 0;
+    }
+
+
+    100% {
+        opacity: 1;
+    }
+}
+
+.delete-btn {
+    font-size: 30px;
+    border-radius: 30px;
+    border: 4px;
+    color: rgb(113, 113, 113);
+    transition: all 0.3s;
+}
+
+.delete-btn:hover {
+    background: linear-gradient(45deg, #4867c5, #6a0783);
+    color: rgb(224, 224, 224);
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+}
+
+.truncate-text {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+
+.favori-texts-box {
+    overflow-x: auto;
+    height: 80vh;
+}
+
+.favori-texts-box::-webkit-scrollbar {
+    display: block;
+    width: 7px;
+}
+
+
+.favori-li {
+    transition: transform 0.1s ease-in;
+}
+
+.favori-li:hover {
+    transform: scale(1.02);
+}
+
+.all-chats-delete-btn {
+    font-size: 18px;
+    background: rgba(97, 97, 97, 0.334);
+    padding: 6px 20px;
+    border-radius: 4px;
+    color: rgb(216, 216, 216);
+    transition: all 0.2s ease-in;
+
+}
+
+.all-chats-delete-btn:hover {
+    background: rgba(202, 56, 56, 0.858);
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+}
+
+/* Generator Bar Styles*/
+
+.sidebar-bar {
+    z-index: 10;
+    width: 25%;
+}
+
+.hami-info-text {
+    font-size: 16px;
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+
+    55% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes moveLeft {
+    0% {
+        transform: translateX(-500px);
+    }
+
+    100% {
+        transform: translateX(0);
+    }
+}
+
+
+.welcome-user-bar {
+    opacity: 0;
+    animation: fadeIn 1.8s forwards, moveLeft 1.8s forwards;
+    transform: translateX(300px);
+    z-index: 3;
+    width: 92%;
+    margin-top: 30px;
+}
+
+
+.hello-user-h1 {
+    font-size: 60px;
+    background-image: linear-gradient(45deg, #1042a5, #b34fa6, #00249b);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: rgba(125, 2, 233, 0.253) 0px 8px 24px;
+}
+
+.input-bar {
+    opacity: 0;
+    animation: InputAni 3.8s forwards, moveLeft 0s forwards;
+    transform: translateX(300px);
+    z-index: 3;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    display: flex;
+    flex-direction: col;
+    width: 92%;
+    height: 20%;
+    justify-content: center;
+    margin-top: 20px;
+
+}
+
+@keyframes InputAni {
+    0% {
+        opacity: 0;
+    }
+
+    75% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+/* ResultData Part */
+
+.result-box {
+    overflow-y: scroll;
+    position: relative;
+    cursor: text;
+    opacity: 0;
+    animation: fadeIn 3.3s forwards, moveLeft 3.3s forwards;
+    transform: translateX(300px);
+    z-index: 3;
+    width: 92%;
+}
+
+.result-box::-webkit-scrollbar {
+    display: block;
+    width: 10px;
+}
+
+.result-title {
+    display: flex;
+    flex-direction: column;
+}
+
+.result-data h1 {
+    font-size: 25px;
+    font-weight: 400;
+}
+
+.result-data h2 {
+    font-size: 22px;
+    font-weight: 600;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.result-data p {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    font-weight: 400;
+}
+
+.result-data li {
+    margin-top: 15px;
+    margin-bottom: 15px;
+    margin-left: 25px;
+    font-size: 18px;
+    padding: 2px;
+    border-radius: 12px;
+    list-style-type: disc;
+}
+
+.result-data a {
+    border-bottom: 2px solid #127ce6;
+    background-color: rgba(47, 92, 137, 0.19);
+    padding-left: 4px;
+    padding-right: 4px;
+    border-radius: 3px;
+}
+
+.result-data li strong {
+    font-size: 18px;
+    padding: 3px;
+    border-radius: 4px;
+    background-image: linear-gradient(45deg, #6c90ea, #127ce6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+
+.hami-logo {
+    background-image: linear-gradient(45deg, #1042a5, #b34fa6, #00249b);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.loader {
+    border-radius: 50%;
+    display: flex;
+    width: 30px;
+    margin-left: 14px;
+    margin-top: 10px;
+    height: 30px;
+    animation: spin 1s linear infinite;
+    background: linear-gradient(135deg, #3b3b3b00, #85858500);
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+
+.result-visibility {
+    opacity: 1;
+    animation: Visibility 1s ease-in;
+}
+
+.showResultVisible {
+    opacity: 1;
+    animation: ShowResultVisibility 0.6s ease-in;
+}
+
+.showResultHidden {
+    opacity: 1;
+    animation: HideResultVisibility 0.8s ease-out;
+}
+
+@keyframes ShowResultVisibility {
+    0% {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    30% {
+        transform: translateY(30px);
+        opacity: 0;
+    }
+
+    55% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0px);
+    }
+}
+
+@keyframes HideResultVisibility {
+    0% {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    30% {
+        transform: translateY(30px);
+        opacity: 0;
+    }
+
+    40% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0px);
+    }
+}
+
+@keyframes Visibility {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+
+.search-box {
+    width: 75%;
+    display: flex;
+    align-items: center;
+    position: relative;
+    height: 65px;
+    border-radius: 30px;
+}
+
+#myTextarea {
+    max-height: 200px;
+    border-radius: 30px 10px 30px 30px;
+    padding: 10px;
+    padding-left: 20px;
+    resize: none;
+    position: absolute;
+    bottom: 10px;
+    outline: none;
+    width: 90%;
+    z-index: 999;
+}
+
+#myTextarea::-webkit-scrollbar {
+    display: block;
+    width: 7px;
+}
+
+#sendButton {
+    color: white;
+    border: none;
+    border-radius: 30px;
+    font-size: 24px;
+    padding: 10px;
+    right: 10px;
+    cursor: pointer;
+    position: absolute;
+    bottom: 10px;
+    background: #4b4b4b;
+}
+
+#sendButton:disabled {
+    cursor: not-allowed;
+}
+
+#sendButton:hover {
+    background: linear-gradient(45deg, #b34fa6, #00249b);
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+}
+
+
+.favorite-chats-ul {
+    display: flex;
+    flex-direction: column-reverse;
+}
+
+.icon-btns {
+    font-size: 22px;
+}
+
+/* ======= Media Query ======= */
+
+.generator-page-layout {
+    display: flex;
+}
+
+@media (min-width: 780px) and (max-width: 1300px) {
+    .search-box {
+        width: 90%;
+        display: flex;
+        align-items: center;
+        position: relative;
+        height: 65px;
+        border-radius: 30px;
+    }
+  }
+
+@media (max-width: 770px) {
+
+    .generator-page-layout {
+        flex-direction: column-reverse;
+    }
+
+    .sidebar-bar {
+        z-index: 10;
+        width: 100%;
+
+    }
+
+    .hello-user-h1 {
+        font-size: 40px;
+        text-align: center;
+    }
+
+    .welcome-user-bar {
+        width: 105%;
+        margin-top: 70px;
+    }
+
+    .search-box {
+        width: 100%;
+        font-size: 15px;
+        align-items: center;
+        position: relative;
+        height: 65px;
+        border-radius: 30px;
+        bottom: 10px;
+    }
+
+
+    #myTextarea {
+        width: 80%;
+    }
+
+    .hami-info-text {
+        font-size: 16px;
+        text-align: center;
+        margin-top: 10px;
+    }
+
+    .result-box {
+        width: 105%;
+    }
+
+    .input-bar {
+        width: 105%;
+    }
+
+    .icon-btns {
+        text-align: center;
+        font-size: 30px;
+    }
+}

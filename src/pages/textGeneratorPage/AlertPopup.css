@@ -1,0 +1,63 @@
+.popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.408);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1111111111;
+    backdrop-filter: blur(6px);
+}
+
+.popup-box {
+    padding: 20px;
+    border: 2px solid;
+    background-color: #131313;
+    width: 440px;
+    height: 180px;
+    margin-left: 20px;
+    margin-right: 20px;
+    border: 5px rgb(30, 30, 30) solid;
+    border-radius: 10px;
+    opacity: 1;
+    animation: SlowlyVisibility 0.3s ease-in-out;
+}
+
+
+/* Buttons */
+
+.btns {
+    padding: 8px 20px;
+    border-radius: 5px;
+    transition: all 0.1s ease-in;
+}
+
+#delete-btn {
+    background-color: #cd3030;
+}
+
+#delete-btn:hover {
+    box-shadow: rgba(231, 33, 33, 0.167) 0px 8px 24px;
+}
+
+#cancel-btn {
+    border: 2px solid rgba(40, 40, 40, 0.937);
+}
+
+#cancel-btn:hover {
+    border: 2px solid rgba(206, 191, 191, 0.284);
+    box-shadow: rgba(172, 164, 164, 0.058) 0px 8px 24px;
+}
+
+
+/* ===== Media ===== */
+
+@media (max-width: 600px) {
+
+    .popup {
+        font-size: 15px;
+    }
+}

@@ -1,0 +1,179 @@
+body {
+    box-sizing: border-box;
+    justify-content: center;
+    overflow: hidden;
+
+}
+
+.hami-logo-box {
+    opacity: 1;
+    animation: hamiLogoAni 1s ease;
+}
+
+@keyframes hamiLogoAni {
+    0% {
+        opacity: 0;
+        transform: translateY(100px);
+    }
+
+    20% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+.hami-login-box {
+
+    animation: hamiLogoAni 1s ease;
+}
+
+
+
+@keyframes hamiInfoLeaveAnimation {
+    0% {
+        opacity: 1;
+
+    }
+
+    100% {
+        opacity: 0;
+    }
+}
+
+
+
+.hami-login-info {
+
+    background: linear-gradient(45deg, #3498db, #b34fa6, #00249b);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-align: center;
+    margin-top: 5px;
+    font-size: 50px;
+    animation: hamiLogoAni 1s ease;
+}
+
+/* Animation Background */
+
+.main-background {
+    position: absolute;
+    padding-top: 15% !important;
+    inset: 0;
+    justify-content: center;
+    display: inline-flex;
+    flex-direction: row;
+    overflow: hidden;
+
+}
+
+.bg-shape1 {
+    width: 520px;
+    height: 520px;
+    border-radius: 9999px;
+    position: relative;
+    animation: one 10s infinite;
+}
+
+.bg-shape2 {
+    width: 420px;
+    height: 420px;
+    border-radius: 9999px;
+    position: relative;
+    animation: two 10s infinite;
+}
+
+@keyframes one {
+    0% {
+        left: 0px;
+        top: 0px;
+    }
+
+    25% {
+        left: -100px;
+        top: 70px;
+    }
+
+    50% {
+        left: 20px;
+        top: 150px;
+    }
+
+    75% {
+        left: 50px;
+        top: 100px;
+    }
+
+    100% {
+        left: 0px;
+        top: 0px;
+    }
+}
+
+@keyframes two {
+    0% {
+        left: 0px;
+        top: 0px;
+    }
+
+    25% {
+        left: 50px;
+        top: 10px;
+    }
+
+    50% {
+        left: 100px;
+        top: 50px;
+    }
+
+    75% {
+        left: 50px;
+        top: 100px;
+    }
+
+    100% {
+        left: 0px;
+        top: 0px;
+    }
+}
+
+.opacity-50 {
+    opacity: .5;
+}
+
+.bg-blur {
+    filter: blur(100px);
+}
+
+.bg-primary {
+    background-color: rgba(12, 75, 146, 0.767);
+}
+
+.bg-teal {
+    background-color: rgb(179, 79, 166);
+}
+
+.bg-purple {
+    background-color: rgb(0, 36, 155)
+}
+
+/* Dark/Light */
+
+.dark-theme {
+    background-color: rgb(18, 18, 18);
+    transition: 0.5s background-color;
+}
+
+.light-theme {
+    transition: 0.5s background-color;
+    background-color: rgb(255, 255, 255);
+}
+
+
+@media (max-width: 768px) {
+    .hami-logo-box p {
+        font-size: 27px;
+    }
+}
