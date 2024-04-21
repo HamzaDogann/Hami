@@ -1,3 +1,7 @@
+.image-generator-box{
+ overflow: hidden;
+}
+
 .smooth-transitions {
     transition: 0.2s background-color;
 }

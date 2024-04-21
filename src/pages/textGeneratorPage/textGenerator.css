@@ -424,6 +424,7 @@
 
     .generator-page-layout {
         flex-direction: column-reverse;
+        overflow: hidden;
     }
 
     .sidebar-bar {

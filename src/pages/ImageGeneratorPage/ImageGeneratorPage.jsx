@@ -34,7 +34,7 @@ const ImageGeneratorPage = () => {
   }, []);
 
   return (
-    <div className={`smooth-transitions ${darkMode ? "bg-white " : "bg-[#161616]"}`}>
+    <div className={`image-generator-box  w-full  smooth-transitions ${darkMode ? "bg-white " : "bg-[#161616]"}`}>
       <Header />
       <ImageGenerator theme={darkMode} language={language} />
       <Footer theme={darkMode} />
