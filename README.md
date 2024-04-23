@@ -48,3 +48,8 @@
 #### ✖️ There is no database connection in this project.
 #### ✅ Data is kept on Local Storage.
 -------------------
+
+## Project  Information
+- Publication Date: 23.04.2024
+- Last Update: 24.04.2024 🕟 21:24
+- Version: 1.0
