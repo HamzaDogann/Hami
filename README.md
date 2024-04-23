@@ -7,7 +7,6 @@
 
 ![Introduction](https://github.com/HamzaDogann/Hami/assets/93007915/1b313385-5711-4897-be5f-04d56d48eb51)
 
-## About the project
  Hami, is a web application developed by Hamza Doğan, capable of generating images and text using artificial intelligence models. You can favorite the results you like and view them later. With its modern and user-friendly interface, it provides you with a great experience.
 
  
