@@ -1,22 +1,27 @@
 
 
-# Hami - Text & Image Generator
----------
-## ✨ Introduction
+![hami](https://github.com/HamzaDogann/Hami/assets/93007915/ec38558b-ac11-4ba4-ab44-d02fb1ff3156)
 
+
+---------
+
+![Introduction](https://github.com/HamzaDogann/Hami/assets/93007915/1b313385-5711-4897-be5f-04d56d48eb51)
+
+## About the project
  Hami, is a web application developed by Hamza Doğan, capable of generating images and text using artificial intelligence models. You can favorite the results you like and view them later. With its modern and user-friendly interface, it provides you with a great experience.
+
  
----------
- ## 🏞️ Project Banner
-
-![HamiAIDevicesBanner](https://github.com/HamzaDogann/Hami/assets/93007915/e42ba4e2-b0c1-466c-9ebc-7cb1773dd11e)
-
---------------------
-
- ## About the project
  Users log in by choosing an avatar and a name, and then they encounter a menu. They can choose between the Text or Image generator menus. On the Text Generator page, they make a prompt (about coding, articles, poems, anecdotes, artistic content, inspiring ideas, and many other topics). They can copy the liked results or add them to favorites. Later, they can view their added favorites and delete them if they wish. On the Image generator page, users can create an image by selecting their prompts, image quality, and image style. They can download the created image or add it to favorites. They can view, search, and remove the images they added to the Favorite images page.
 
 -----------------------
+
+
+![ProjectBanner](https://github.com/HamzaDogann/Hami/assets/93007915/890326ea-b6da-4641-a52e-d38df849180b)
+
+
+![HamiAIDevicesBanner](https://github.com/HamzaDogann/Hami/assets/93007915/e42ba4e2-b0c1-466c-9ebc-7cb1773dd11e)
+
+
 
 ![techo](https://github.com/HamzaDogann/Hami/assets/93007915/4a50da05-c3ec-4445-98ee-a60058100110)
 
