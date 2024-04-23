@@ -27,7 +27,6 @@
 
 ### 🔧 Dependencies in the project.
 - google/generative-ai: ^0.3.0,
-- openai: 4.33.0
 - react: ^18.2.0,
 - react-dom: ^18.2.0,
 - react-icons: ^5.0.1,
