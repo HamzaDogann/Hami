@@ -3,7 +3,9 @@
 # Hami - Text & Image Generator
 ---------
 ## ✨ Introduction
- #### Hami, is a web application developed by Hamza Doğan, capable of generating images and text using artificial intelligence models. You can favorite the results you like and view them later. With its modern and user-friendly interface, it provides you with a great experience.
+
+ Hami, is a web application developed by Hamza Doğan, capable of generating images and text using artificial intelligence models. You can favorite the results you like and view them later. With its modern and user-friendly interface, it provides you with a great experience.
+ 
 ---------
  ## 🏞️ Project Banner
 
