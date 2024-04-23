@@ -50,7 +50,9 @@
 #### ✅ Data is kept on Local Storage.
 -------------------
 
-## Project  Information
+![ProjectInformation](https://github.com/HamzaDogann/Hami/assets/93007915/0a0388f6-3ff0-4e9a-bb20-8cbd8575a8a2)
+
+
 - Publication Date: 23.04.2024
 - Last Update: 24.04.2024 🕟 21:24
 - Version: 1.0
