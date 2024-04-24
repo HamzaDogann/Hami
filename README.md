@@ -62,6 +62,9 @@ The features to be added to the project were researched by evaluating competitor
 
 Storyboarding was conducted to have an idea of how the project would look and what designs would be made.
 
+![Storyboards](https://github.com/HamzaDogann/Hami/assets/93007915/59149d19-076a-4627-a6e6-d2cdabc61b81)
+
+
 ## 4 - Project Initiation
 
 After conducting project needs assessments, resource research, evaluation of competitor applications, and storyboard work, the project was initiated on March 5, 2024.
