@@ -48,6 +48,40 @@
 #### ✅ Data is kept on Local Storage.
 -------------------
 
+![ProjectProcess](https://github.com/HamzaDogann/Hami/assets/93007915/e226e17d-e93a-4736-a5e5-02d54f97c975)
+
+## 1 - Resources and Research
+
+During the project process, the identification of resources and tools to be used was prioritized. The process of identifying needs and resources took about 1 week.
+
+## 2 - Project Features
+
+The features to be added to the project were researched by evaluating competitor applications and exploring the use of tools.
+
+## 3 - Project Storyboard and Prototyping
+
+Storyboarding was conducted to have an idea of how the project would look and what designs would be made.
+
+## 4 - Project Initiation
+
+After conducting project needs assessments, resource research, evaluation of competitor applications, and storyboard work, the project was initiated on March 5, 2024.
+
+## 5 - Utilization of Resources and Tools
+
+Development of the application continued using the identified resources and tools. Additional work was done to address deficiencies, errors, and bugs.
+
+## 6 - Application Testing Process
+
+Each scenario was carefully checked by the developer and efforts were made to eliminate all bugs and errors as much as possible.
+
+## 7 - Implementation of the Project
+
+The project was largely completed and presented to users on April 23, 2024.
+
+## 8 - User Experience and Issue Resolution
+
+The project continues to be improved based on user feedback and requests received daily, with efforts ongoing to resolve issues and improve user experience.
+
 ![ProjectInformation](https://github.com/HamzaDogann/Hami/assets/93007915/0a0388f6-3ff0-4e9a-bb20-8cbd8575a8a2)
 
 
