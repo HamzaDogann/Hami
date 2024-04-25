@@ -25,7 +25,7 @@
 - Vite & React
 - Tailwind CSS
 
-### 🔧 Dependencies in the project.
+### 🔧 Dependencies in the project
 - google/generative-ai: ^0.3.0,
 - react: ^18.2.0,
 - react-dom: ^18.2.0,
@@ -35,13 +35,19 @@
 - react-syntax-highlighter: ^15.5.0
 
   
-### 🔹 React Hooks used in the project.
+### 🔹 React Hooks used in the project
 - useState
 - useEffect
 - useCallback
 - useMemo
 - useRef
 - useContext
+
+### 🔹React Router used in the project.
+- Routes
+- Route
+- Navigate
+- Link
 
 
 #### ✖️ There is no database connection in this project.
