@@ -20,7 +20,6 @@ function App() {
 
   // User Infos
   const userInfos = localStorage.getItem('userAccount');
-  console.log("Rendered")
 
   return (
     <LanguageProvider>
