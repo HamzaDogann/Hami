@@ -8,7 +8,7 @@ import {
 
 // NodeJS is important here because these variables should be hidden. So we need to .env file but developer of this project doesn't know about NodeJS.
 const MODEL_NAME = "gemini-1.0-pro";
-const API_KEY = "AIzaSyDPURNza6kz7OqLayjicQ5XXO-j7BYCHk4";
+const API_KEY = "AIzaSyDpVqeMoV6VoB0BtCAhQDYFfLzG_d1s8ok";
 
 
 async function runChat(prompt) {
