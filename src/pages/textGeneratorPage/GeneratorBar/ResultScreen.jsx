@@ -102,9 +102,8 @@ const ResultScreen = ({ userInfos, theme }) => {
         toggleModal(true, language === "en" ? "A new favorite chat has been added" : "Yeni bir favori sohbet eklendi");
 
     }
-    console.log("ResultScreen Component rendered")
+    
     const memoizedContent = useMemo(() => {
-        console.log("AAAAAA rendered");
         return (
             <div className="result">
                 <div className='result-title'>
