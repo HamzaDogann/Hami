@@ -95,7 +95,7 @@ The project continues to be improved based on user feedback and requests receive
 
 
 - Publication Date: 23.04.2024
-- Last Update: 25.04.2024 🕟 10:40
+- Last Update: 6.06.2024 🕟 13:30
 - Version: 1.0
 
 -------------------
