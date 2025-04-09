@@ -1,6 +1,6 @@
 // Image AI Configuration
 
-const API_TOKEN = import.meta.env.VITE_ARTPLES_API";
+const API_TOKEN = import.meta.env.VITE_ARTPLES_API;
 
 async function runImage(prompts, quality, style) {
     async function query(data) {
