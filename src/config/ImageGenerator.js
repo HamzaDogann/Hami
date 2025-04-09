@@ -1,7 +1,7 @@
 // Image AI Configuration
 
-// Node.js and .env are important things but goal of this project is learning project management and provides product.
-const API_TOKEN = "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";
+const API_TOKEN = import.meta.env.VITE_ARTPLES_API";
+
 async function runImage(prompts, quality, style) {
     async function query(data) {
         const response = await fetch(
