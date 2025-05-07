@@ -2,7 +2,7 @@
 
 // .env dosyanızdaki Hugging Face API token'ı
 // (VITE_ARTPLES_API veya VITE_HF_API_TOKEN gibi bir isim kullanabilirsiniz)
-const API_TOKEN = import.meta.env.VITE_HF_API_TOKEN; // veya VITE_ARTPLES_API
+const API_TOKEN = import.meta.env.VITE_ARTPLES_API; // veya VITE_ARTPLES_API
 
 // Replicate üzerinden kullanılacak modelin tam yolu
 const REPLICATE_MODEL_PATH = "black-forest-labs/flux-dev";
