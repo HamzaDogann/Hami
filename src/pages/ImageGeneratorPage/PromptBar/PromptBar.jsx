@@ -1,56 +1,39 @@
-//React Hooks
-import { useContext,useState,useEffect } from "react";
+import { useAIImage } from '../../../providers/AImageContext'
+import { useLanguage } from '../../../providers/LanguageContext'
+import { useTheme } from '../../../providers/ThemeContext'
+import { useUser } from '../../../providers/userAccountContext'
 
-//Providers
-import { AImageContext } from '../../../providers/AImageContext'
-
-//UserInfos
-import Avatars from "../../../components/AvatarSelection/avatars";
-
-//Style
 import "./promptBar.css";
 import { MdOutlineDraw } from "react-icons/md";
 import PromptOptions from "./PromptBarComponents/PromptOptions";
 import GenerateButton from "./PromptBarComponents/GenerateButton";
 
+const PromptBar = () => {
 
-const PromptBar = ({ theme, language }) => {
-
-    const [userAvatar, setUserAvatar] = useState('');
-    const [userName, setUserName] = useState('');
-    const { setPrompts, prompts } = useContext(AImageContext);
-
-    useEffect(() => {
-        const userInfos = JSON.parse(localStorage.getItem('userAccount'));
-        const initialAvatar = Avatars[userInfos.avatarId - 1].AvatarImage;
-        const initialName = userInfos.username;
-
-        setUserAvatar(initialAvatar);
-        setUserName(initialName);
-    }, []);
-
-
-    const handleTextAreaPrompts = (e) => {
-        setPrompts(e.target.value);
-    }
+    const { t } = useLanguage();
+    const { isLightTheme } = useTheme();
+    const { userName, userAvatar } = useUser();
+    const { prompts, setPrompts } = useAIImage();
 
     return (
         <>
             {/* User Box */}
             <div className='user-box'>
                 <img className='user-avatar' src={userAvatar} alt="Avatar" />
-                <h1 className='hello-user-name' >{language === "en" ? "Hey" : "Selam"} {userName},</h1>
+                <h1 className='hello-user-name' >{t("hey")} {userName},</h1>
             </div>
 
-            <div className={`generator-bar-ani w-full ${!theme ? "bg-[#1a1a1adf]" : "bg-[#eaeaeadf]"} rounded-md py-5 mt-2`}>
+            <div className={`generator-bar-ani w-full ${!isLightTheme ? "bg-[#1a1a1adf]" : "bg-[#eaeaeadf]"} rounded-md py-5 mt-2`}>
 
                 {/* Prompt Text Box */}
                 <div className="prompt-box">
                     <MdOutlineDraw className="info-icons" />
-                    <textarea value={prompts} onChange={handleTextAreaPrompts} className={`prompt-input ${!theme ? "bg-[#222222] text-[#d4d4d4]" : "bg-[#dddddd] text-[#212121]"}`}
-                        placeholder={`${language === "en" ? "Write your request, keywords and your imagination here..." : "Buraya isteğinizi, anahtar kelimeleri ve hayal gücünüzü yazın..."}`}>
-
-                    </textarea>
+                    <textarea
+                        value={prompts}
+                        onChange={(event) => setPrompts(event.target.value)}
+                        className={`prompt-input ${!isLightTheme ? "bg-[#222222] text-[#d4d4d4]" : "bg-[#dddddd] text-[#212121]"}`}
+                        placeholder={t("promptPlaceholder")}
+                    />
                 </div>
 
                 <div className=" w-full flex ml-[80px] mt-[20px] hr-tag">
@@ -61,7 +44,6 @@ const PromptBar = ({ theme, language }) => {
                 <GenerateButton />
             </div>
         </>
-
     )
 }
 

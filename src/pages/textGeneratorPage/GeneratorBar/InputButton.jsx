@@ -1,81 +1,67 @@
-//React Hooks
-import React, { useRef, useEffect, useContext } from 'react';
+import { useEffect, useRef } from 'react';
 
-// Providers
-import { AIContext } from '../../../providers/AIChatContext';
+import { useAIChat } from '../../../providers/AIChatContext';
+import { useLanguage } from '../../../providers/LanguageContext';
+import { useTheme } from '../../../providers/ThemeContext';
 
-// Styles - Icons
 import "../textGenerator.css";
 import { BiSend } from 'react-icons/bi';
 
-function InputButton({ theme, language }) {
+const MAX_INPUT_HEIGHT = 200;
+
+function InputButton() {
 
     const inputRef = useRef(null);
 
-    const { onSent, setInput, input, resultData } = useContext(AIContext)
+    const { t } = useLanguage();
+    const { isLightTheme } = useTheme();
+    const { input, setInput, sendPrompt, loading } = useAIChat();
 
+    const canSend = input.trim() !== "" && !loading;
+
+    // Grow with the text; shrink back when the user clicks elsewhere.
     useEffect(() => {
-        if (inputRef.current) {
-            inputRef.current.style.height = 'auto';
-            inputRef.current.style.height = `${Math.min(inputRef.current.scrollHeight, 200)}px`;
+        const textarea = inputRef.current;
+        if (textarea) {
+            textarea.style.height = 'auto';
+            textarea.style.height = `${Math.min(textarea.scrollHeight, MAX_INPUT_HEIGHT)}px`;
         }
 
         const handleClickOutside = (event) => {
-            if (inputRef.current && !inputRef.current.contains(event.target)) {
-                inputRef.current.style.height = 'auto';
-            }
+            if (textarea && !textarea.contains(event.target)) textarea.style.height = 'auto';
         };
 
         document.addEventListener('mousedown', handleClickOutside);
-
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
-        };
+        return () => document.removeEventListener('mousedown', handleClickOutside);
     }, [input]);
 
-    const handleInputChange = (event) => {
-        setInput(event.target.value);
-    };
-
-    const inputController = () => {
-        return !input || !input.trim();
-
-    };
-    const handleButtonClick = () => {
-        if (!inputController() && resultData === "empty") {
-            onSent();
-        }
-
-        if (!inputController() && resultData !== "") {
-            onSent();
-        }
-    };
-
-    const handleKeyPress = (event) => {
+    // Enter sends, Shift+Enter inserts a new line.
+    const handleKeyDown = (event) => {
         if (event.key === 'Enter' && !event.shiftKey) {
-            handleButtonClick();
+            event.preventDefault();
+            if (canSend) sendPrompt();
         }
     };
 
     return (
         <div
-            className={`search-box ${!theme ? "bg-[#212121]" : "bg-gray-300"}`}>
+            className={`search-box ${!isLightTheme ? "bg-[#212121]" : "bg-gray-300"}`}>
             <textarea
-                className={`${!theme ? "bg-[#212121] text-white  " : "bg-gray-300 text-black"} `}
+                className={`${!isLightTheme ? "bg-[#212121] text-white  " : "bg-gray-300 text-black"} `}
                 id="myTextarea"
                 ref={inputRef}
                 rows="1"
                 value={input}
-                onChange={handleInputChange}
-                onKeyPress={handleKeyPress}
-                placeholder={`${language === "en" ? "Write your message here..." : "Mesajınızı buraya yazın..."}`}
-                style={{ maxHeight: '200px', overflowY: 'auto', borderRadius: '30px 10px 30px 30px', padding: '10px', paddingLeft: '20px', resize: 'none', position: 'absolute', bottom: '10px', outline: 'none', zIndex: '999' }}
+                onChange={(event) => setInput(event.target.value)}
+                onKeyDown={handleKeyDown}
+                placeholder={t("messagePlaceholder")}
+                style={{ maxHeight: `${MAX_INPUT_HEIGHT}px`, overflowY: 'auto', borderRadius: '30px 10px 30px 30px', padding: '10px', paddingLeft: '20px', resize: 'none', position: 'absolute', bottom: '10px', outline: 'none', zIndex: '999' }}
             />
 
             <button
                 id="sendButton"
-                disabled={inputController()}
-                onClick={handleButtonClick}>
+                disabled={!canSend}
+                onClick={sendPrompt}>
                 <BiSend />
             </button>
         </div>

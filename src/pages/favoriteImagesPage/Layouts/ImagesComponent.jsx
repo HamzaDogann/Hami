@@ -1,41 +1,29 @@
-//React Hooks
-import { useState, useEffect, useContext } from 'react';
-
-//Providers
-import { AImageContext } from '../../../providers/AImageContext';
+import { useFavImages } from '../../../providers/FavoriteImagesContext';
 import { useLanguage } from '../../../providers/LanguageContext';
 
-//Components
-import Image from "../FavComponents/Image"
+import FavoriteImage from "../FavComponents/FavoriteImage"
 
-//Icons
 import { MdImage } from "react-icons/md";
-
 
 const ImagesComponent = () => {
 
-  const { favImages, inputText } = useContext(AImageContext);
-  const { language } = useLanguage();
-  const [filteredImages, setFilteredImages] = useState([]);
+  const { visibleImages } = useFavImages();
+  const { t } = useLanguage();
 
-  // Filter Favorite Images
-  useEffect(() => {
-    const matchedImages = favImages.filter(image => image.prompts.includes(inputText));
-    setFilteredImages(matchedImages);
-  }, [inputText, favImages]);
+  const hasImages = visibleImages.length > 0;
 
   return (
-    <div className={`images-container ${filteredImages.length > 0 ? '' : 'show-no-content-box'}`}>
-        {filteredImages.length > 0 ? (
-          filteredImages.slice().reverse().map((item, index) => (
-            <Image key={index} image={item.image} prompts={item.prompts} itemId={item.id} />
-          ))
-        ) : (
-          <div className='no-content'>
-            <MdImage size={80} color='#ccc' />
-            <p className='text-[20px] text-[#595959] mt-2'>{language === "en" ? "Not found favorite images" : "Favori resim bulunamadı"}</p>
-          </div>
-        )}
+    <div className={`images-container ${hasImages ? '' : 'show-no-content-box'}`}>
+      {hasImages ? (
+        visibleImages.map((item) => (
+          <FavoriteImage key={item.id} id={item.id} image={item.image} prompts={item.prompts} />
+        ))
+      ) : (
+        <div className='no-content'>
+          <MdImage size={80} color='#ccc' />
+          <p className='text-[20px] text-[#595959] mt-2'>{t("noFavoriteImages")}</p>
+        </div>
+      )}
     </div>
   );
 };

@@ -1,215 +1,66 @@
-//React Hooks
-import { createContext, useState, useEffect } from "react";
+import { createContext, useCallback, useContext, useMemo, useRef, useState } from "react";
 
-//Configuration
 import runImage from "../config/ImageGenerator";
 
-export const AImageContext = createContext();
+const AIImageContext = createContext(null);
 
-const AImageContextProvider = (props) => {
+// Owns the current generation only (prompt, options, result). Saved images live in FavImagesProvider.
+export const AIImageProvider = ({ children }) => {
 
-    //New Image Generate States
     const [prompts, setPrompts] = useState("");
-    const [quality, setQuality] = useState("high details, high quality");
-    const [style, setStyle] = useState("ultra realistic");
+    const [quality, setQuality] = useState("High");
+    const [style, setStyle] = useState("Realistic");
+
     const [showResult, setShowResult] = useState(false);
     const [recentPrompt, setRecentPrompt] = useState("");
     const [loading, setLoading] = useState(false);
+    const [errorCode, setErrorCode] = useState(null);
     const [isSaved, setIsSaved] = useState(false);
-    const [resultData, setResultData] = useState("");
-    const [imageObjectURL, setImageObjectURL] = useState("");
-    const [error, setError] = useState(false);
 
-    //Favorite Images States
-    const [favImages, setFavImages] = useState([]);
-    const [inputText, setInputText] = useState("");
+    // { blob, url } of the current image. The object URL is revoked when replaced to free memory.
+    const [image, setImage] = useState(null);
+    const objectUrlRef = useRef("");
 
-
-    //--------------------------Generate Process----------------------------------
-
-    const onSentPrompts = async (prompt) => {
-        setShowResult(true);
-        setError(false)
-        setImageObjectURL("")
-        setPrompts("");
-        setResultData("");
-        setLoading(true);
-        setRecentPrompt(prompts);
-        try {
-            const response = await runImage(prompts, quality, style)
-                .then(response => {
-                    const objectURL = URL.createObjectURL(response);
-                    setImageObjectURL(objectURL);
-                })
-            setActiveFavChat(response);
-            setResultData(response);
-        } catch (error) {
-            setError(true)
-        }
-        setQuality("high details, high quality");
-        setStyle("");
-        setPrompts("");
-        setLoading(false);
-    };
-
-
-    //-----------------------------Download, Favorites, Delete  Process----------------------------------
-
-
-    //Download New Image
-    const DownloadNewImage = () => {
-        if (imageObjectURL) {
-            const date = new Date();
-            const formattedDate = `${date.getHours()}${date.getMinutes()}${date.getSeconds()}`;
-            const link = document.createElement('a');
-            link.href = imageObjectURL;
-            link.download = `Hami-Image-${formattedDate}.jpg`;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        }
-    }
-
-    // Download Selected Image
-    const DownloadImage = (selectedImage) => {
-
-        if (selectedImage) {
-            const date = new Date();
-            const formattedDate = `${date.getHours()}${date.getMinutes()}${date.getSeconds()}`;
-            const link = document.createElement('a');
-            link.href = selectedImage;
-            link.download = `Hami-Image-${formattedDate}.jpg`;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        }
-    }
-
-    //----------------------------------------------------------------
-
-
-    // Save In Favorites - Blob Image to Base64 - This function converts blob images to base64. Then saved to favorites.
-
-    const handleSaveInFavorite = () => {
-        const blobURL = imageObjectURL;
-        const imagePrompts = recentPrompt;
-
-        const blobToBase64 = async (blobURL) => {
-            const response = await fetch(blobURL);
-            const blob = await response.blob();
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onloadend = () => resolve(reader.result);
-                reader.onerror = reject;
-                reader.readAsDataURL(blob);
-            });
-        };
-
-        const getTimestamp = () => {
-            const date = new Date();
-            return date.getTime();
-        };
-
-        blobToBase64(blobURL)
-            .then(base64 => {
-                const newRecord = {
-                    id: getTimestamp(),
-                    prompts: imagePrompts,
-                    image: base64
-                };
-
-
-                const prevImages = [...favImages];
-
-
-                const isDuplicate = prevImages.some(record => record.prompts === imagePrompts && record.image === base64);
-
-                if (!isDuplicate) {
-                    prevImages.push(newRecord);
-                    setFavImages(prevImages);
-                    localStorage.setItem('favImages', JSON.stringify(prevImages));
-                }
-            })
-            .catch(error => {
-                console.error(error);
-            });
-    };
-
-    //------------------------------Get that favorite Images from Local Storage---------------------------------   
-
-    useEffect(() => {
-        const getLocalStorageData = (key) => {
-            const data = localStorage.getItem(key);
-            return data ? JSON.parse(data) : [];
-        };
-
-        const images = getLocalStorageData('favImages');
-        setFavImages(images);
+    const replaceImage = useCallback((blob) => {
+        if (objectUrlRef.current) URL.revokeObjectURL(objectUrlRef.current);
+        objectUrlRef.current = blob ? URL.createObjectURL(blob) : "";
+        setImage(blob ? { blob, url: objectUrlRef.current } : null);
     }, []);
 
-    //------------------------------Delete All Favorite Images---------------------------------   
+    const generate = useCallback(async () => {
+        const prompt = prompts.trim();
+        if (!prompt || loading) return;
 
-    const deleteAllFavImages = () => {
-        localStorage.setItem('favImages', JSON.stringify([]));
-        setFavImages([]);
-    }
+        setShowResult(true);
+        setRecentPrompt(prompt);
+        setPrompts("");
+        setErrorCode(null);
+        setIsSaved(false);
+        replaceImage(null);
+        setLoading(true);
 
-    //------------------------------Delete Image---------------------------------   
+        try {
+            replaceImage(await runImage(prompt, quality, style));
+        } catch (error) {
+            setErrorCode(error.code ?? "unavailable");
+        } finally {
+            setLoading(false);
+        }
+    }, [prompts, quality, style, loading, replaceImage]);
 
-    const removeImageFromFavorites = (itemId) => {
-        // Favorilerden bir öğeyi kaldırma işlemi.
-        const updatedImages = favImages.filter(item => item.id !== itemId);
-        setFavImages(updatedImages);
-        localStorage.setItem('favImages', JSON.stringify(updatedImages));
-    };
+    const value = useMemo(() => ({
+        prompts, setPrompts, quality, setQuality, style, setStyle,
+        showResult, setShowResult, recentPrompt, loading, errorCode, isSaved, setIsSaved,
+        imageBlob: image?.blob ?? null,
+        imageUrl: image?.url ?? "",
+        generate,
+    }), [prompts, quality, style, showResult, recentPrompt, loading, errorCode, isSaved, image, generate]);
 
-    //------------------------------AlertPopup For Delete---------------------------------   
+    return <AIImageContext.Provider value={value}>{children}</AIImageContext.Provider>;
+};
 
-    const [popup, setPopup] = useState({
-        show: false,
-        content: "",
-        function: () => { }
-    });
-
-    //------------------------------Providers---------------------------------
-
-
-    const aimageContextValue = {
-        onSentPrompts,
-        loading,
-        resultData,
-        showResult,
-        error,
-        setShowResult,
-        prompts,
-        setPrompts,
-        quality,
-        setQuality,
-        style,
-        setStyle,
-        recentPrompt,
-        imageObjectURL,
-        setImageObjectURL,
-        DownloadImage,
-        handleSaveInFavorite,
-        DownloadNewImage,
-        deleteAllFavImages,
-        removeImageFromFavorites,
-        popup,
-        setPopup,
-        favImages,
-        setFavImages,
-        setInputText,
-        inputText,
-        isSaved,
-        setIsSaved
-    }
-
-    return (
-        <AImageContext.Provider value={aimageContextValue}>
-            {props.children}
-        </AImageContext.Provider>
-    )
-}
-
-export default AImageContextProvider;
+export const useAIImage = () => {
+    const context = useContext(AIImageContext);
+    if (!context) throw new Error("useAIImage must be used inside <AIImageProvider>");
+    return context;
+};

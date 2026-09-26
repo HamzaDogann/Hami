@@ -1,24 +1,25 @@
-//Components
 import PromptBar from "./PromptBar/PromptBar.jsx"
 import ImageBar from "./ImageBar/ImageBar.jsx"
 
-//Style
+import { useTheme } from "../../providers/ThemeContext.jsx";
+
 import "./ImageGenerator.css";
 
-const ImageGenerator = ({ theme, language }) => {
+const ImageGenerator = () => {
+
+    const { isLightTheme } = useTheme();
+
     return (
-        <>
-            <div className={`image-generator-layout ${!theme ? "text-[white]" : "text-[black]"}`}>
-                {/* Prompt Area */}
-                <div className="prompt-bar">
-                    <PromptBar theme={theme} language={language} />
-                </div>
-                {/* Images Area */}
-                <div className="image-bar">
-                    <ImageBar theme={theme} language={language} />
-                </div>
+        <div className={`image-generator-layout ${!isLightTheme ? "text-[white]" : "text-[black]"}`}>
+            {/* Prompt Area */}
+            <div className="prompt-bar">
+                <PromptBar />
             </div>
-        </>
+            {/* Images Area */}
+            <div className="image-bar">
+                <ImageBar />
+            </div>
+        </div>
     )
 }
 

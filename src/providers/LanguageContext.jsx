@@ -1,31 +1,39 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
-const LanguageContext = createContext();
+import { DEFAULT_LANGUAGE, SUPPORTED_LANGUAGES, translations } from '../i18n/translations';
+import { STORAGE_KEYS, readString, writeString } from '../utils/storage';
 
-const LanguageProvider = ({ children }) => {
-  const [language, setLanguage] = useState(() => {
-    const savedLanguage = localStorage.getItem('language');
-    return savedLanguage || 'en'; 
-  });
+const LanguageContext = createContext(null);
 
-  const toggleLanguage = () => {
-    setLanguage((prevLanguage) => (prevLanguage === 'en' ? 'tr' : 'en'));
-  };
+const getInitialLanguage = () => {
+  const saved = readString(STORAGE_KEYS.language);
+  return SUPPORTED_LANGUAGES.includes(saved) ? saved : DEFAULT_LANGUAGE;
+};
+
+export const LanguageProvider = ({ children }) => {
+  const [language, setLanguage] = useState(getInitialLanguage);
 
   useEffect(() => {
-    localStorage.setItem('language', language);
+    writeString(STORAGE_KEYS.language, language);
   }, [language]);
 
-  return (
-    <LanguageContext.Provider value={{ language, toggleLanguage }}>
-      {children}
-    </LanguageContext.Provider>
+  const toggleLanguage = useCallback(() => {
+    setLanguage((current) => (current === 'en' ? 'tr' : 'en'));
+  }, []);
+
+  // t(key) returns the text in the active language; falls back to English, then to the key itself.
+  const t = useCallback(
+    (key) => translations[language][key] ?? translations[DEFAULT_LANGUAGE][key] ?? key,
+    [language]
   );
+
+  const value = useMemo(() => ({ language, toggleLanguage, t }), [language, toggleLanguage, t]);
+
+  return <LanguageContext.Provider value={value}>{children}</LanguageContext.Provider>;
 };
 
-const useLanguage = () => {
+export const useLanguage = () => {
   const context = useContext(LanguageContext);
+  if (!context) throw new Error('useLanguage must be used inside <LanguageProvider>');
   return context;
 };
-
-export { LanguageProvider, useLanguage };

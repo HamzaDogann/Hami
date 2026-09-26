@@ -1,13 +1,15 @@
-//React Hooks - Router
-import { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-//Providers
 import { useTheme } from '../../../../providers/ThemeContext';
 import { useLanguage } from '../../../../providers/LanguageContext';
-import { AImageContext } from '../../../../providers/AImageContext';
+import { useAIImage } from '../../../../providers/AImageContext';
+import { useFavImages } from '../../../../providers/FavoriteImagesContext';
+import { useModal } from '../../../../providers/AlertModalContext';
 
-// Style - Icons
+import { useTransientFlag } from '../../../../hooks/useTransientFlag';
+import { aiErrorKey } from '../../../../i18n/translations';
+import { blobToDataUrl, downloadImage } from '../../../../utils/image';
+
 import PreLoader from '../../../../components/PreLoader';
 import HamiLogo from "../../../../assets/HamiLogo.png";
 import errorImage from "../../../../assets/ErrorImage/errorImage.png";
@@ -18,141 +20,104 @@ import { IoMdImages } from "react-icons/io";
 import { BsFillBookmarkCheckFill } from "react-icons/bs";
 import { MdDownloadDone } from "react-icons/md";
 
+const DOWNLOADED_LABEL_MS = 2000;
 
 const GeneratedImage = () => {
 
-  //Hooks-Providers
   const navigate = useNavigate();
-  const { darkMode } = useTheme();
-  const { language } = useLanguage();
-  const { imageObjectURL, loading, recentPrompt, DownloadNewImage, error, handleSaveInFavorite, isSaved, setIsSaved, setShowResult } = useContext(AImageContext);
+  const { isLightTheme } = useTheme();
+  const { t } = useLanguage();
+  const { showAlert } = useModal();
+  const { addFavImage } = useFavImages();
+  const { imageUrl, imageBlob, loading, recentPrompt, errorCode, isSaved, setIsSaved, setShowResult } = useAIImage();
+  const { active: isDownloaded, trigger: showDownloaded } = useTransientFlag(DOWNLOADED_LABEL_MS);
 
-  //States
-  const [isDownload, setIsDownload] = useState(false);
-
-
-  //Save Button Method
-  const handleSaveButton = () => {
-    handleSaveInFavorite();
-    setIsSaved(true)
+  const handleSave = async () => {
+    const saved = addFavImage(recentPrompt, await blobToDataUrl(imageBlob));
+    if (saved) {
+      setIsSaved(true);
+    } else {
+      showAlert(t("storageFull"));
+    }
   };
 
-  //DownloadImage Button Method
-  const handleDownloadImage = () => {
-    DownloadNewImage();
-    setIsDownload(true)
-
-    setTimeout(() => {
-      setIsDownload(false)
-    }, 2000);
+  const handleDownload = () => {
+    downloadImage(imageUrl, imageBlob?.type);
+    showDownloaded();
   };
 
-  //Show Favorite Button Method
   const handleShowFavorites = () => {
     setShowResult(false);
-    navigate("/favorite-images")
+    navigate("/favorite-images");
   };
-
 
   return (
     <div className='generated-image-box'>
       {/* Generated Image */}
       <div className='generated-image'>
-        <div className={`img-box ${!darkMode ? "bg-[#1a1a1a]" : "bg-[#dadada]"} `}>
+        <div className={`img-box ${!isLightTheme ? "bg-[#1a1a1a]" : "bg-[#dadada]"} `}>
           {loading
-            ?
-            //Pre Loader
-            <PreLoader />
-
-            // Generated Image
-            :
-            imageObjectURL
-              ? <img className='img-element' src={imageObjectURL} alt="" />
-              : <img className='img-element' src={errorImage} alt="" />
+            ? <PreLoader />
+            : <img className='img-element' src={imageUrl || errorImage} alt="" />
           }
         </div>
       </div>
 
-
-      {/* Generated Image Prompts */}
-      {imageObjectURL ? <div className='generated-image-prompt-box'>
-        <div className={`prompts-box ${!darkMode ? "bg-[#1a1a1adf]" : "bg-[#d7d7d7df]"} `}>
-          <div className='icon-box'>
-            <MdOutlineDraw />
+      {imageUrl
+        ? <>
+          {/* Prompt */}
+          <div className='generated-image-prompt-box'>
+            <div className={`prompts-box ${!isLightTheme ? "bg-[#1a1a1adf]" : "bg-[#d7d7d7df]"} `}>
+              <div className='icon-box'>
+                <MdOutlineDraw />
+              </div>
+              <div className={`content-box ${!isLightTheme ? "text-[#dedededf]" : "text-[#242424df]"} `}>
+                <p>{recentPrompt}</p>
+              </div>
+            </div>
           </div>
-          <div className={`content-box ${!darkMode ? "text-[#dedededf]" : "text-[#242424df]"} `}>
-            <p>{recentPrompt}</p>
+
+          {/* Download / Save in favorites / Show favorites */}
+          <div className='download-favorite-buttons-box'>
+            <button onClick={handleDownload} className='download-btn'>
+              {!isDownloaded ?
+                <>
+                  <span className='mr-3'>{t("downloadImage")}</span>
+                  <span className='text-[23px]'><FiDownload /></span>
+                </>
+                : <>
+                  <span className='image-down-ani mr-3'>{t("downloaded")}</span>
+                  <span className='image-down-ani text-[23px]'><MdDownloadDone /></span>
+                </>
+              }
+            </button>
+
+            <button onClick={handleSave} className='save-btn'>
+              {!isSaved
+                ? <>
+                  <span className='mr-3'>{t("saveInFavorites")}</span>
+                  <span className='text-[23px]'><LuImagePlus /></span>
+                </>
+                : <>
+                  <span className='saved-span mr-3'>{t("saved")}</span>
+                  <span className='saved-span text-[23px]'><BsFillBookmarkCheckFill /></span>
+                </>
+              }
+            </button>
+
+            <button onClick={handleShowFavorites} className={`show-favorites-btn ${isSaved ? 'relative' : ''}`}>
+              <span className={isSaved ? 'saved-icon-ani' : 'text-[23px]'}><IoMdImages /></span>
+            </button>
           </div>
-        </div>
-      </div> : null}
-
-
-      {/* Generated Image Download and Save on Favorites - All Favorites Button */}
-      {imageObjectURL
-        ?
-        <div className='download-favorite-buttons-box'>
-
-          {/* Download Button */}
-          <button onClick={handleDownloadImage} className='download-btn'>
-            {!isDownload ?
-              <>
-                <span className='mr-3'>{language === "en" ? "Download Image" : "Resmi İndir"}</span>
-                <span className='text-[23px]'><FiDownload /></span>
-              </>
-              : <>
-                <span className='image-down-ani mr-3'>{language === "en" ? "Downloaded" : "Resmi İndirildi"}</span>
-                <span className='image-down-ani text-[23px]'><MdDownloadDone /></span>
-              </>
-            }
-          </button>
-
-          {/* Save Button */}
-          <button onClick={handleSaveButton} className='save-btn'>
-            {!isSaved
-              ? <>
-                <span className='mr-3'>{language === "en" ? "Save In Favorites" : "Favorilere Kaydet"}</span>
-                <span className='text-[23px]'><LuImagePlus /></span>
-
-              </>
-              :
-              <>
-                <span className='saved-span mr-3'>{language === "en" ? "Saved" : "Favorilere Eklendi"}</span>
-                <span className='saved-span text-[23px]'><BsFillBookmarkCheckFill /></span>
-              </>
-            }
-          </button>
-
-          {!isSaved ?
-            <>
-              <button onClick={handleShowFavorites} className='show-favorites-btn'>
-                <span className='text-[23px]'><IoMdImages /></span>
-              </button>
-            </>
-            : <>
-              <button onClick={handleShowFavorites} className='show-favorites-btn relative'>
-                <span className='saved-icon-ani'><IoMdImages /></span>
-              </button>
-            </>
-          }
-
-        </div>
-        :
-
-        <div className='hami-image-generator-info'>
+        </>
+        : <div className='hami-image-generator-info'>
           <div className='flex justify-center'>
-            <img className='w-[60px] mr-1' src={HamiLogo} />
+            <img className='w-[60px] mr-1' src={HamiLogo} alt="" />
           </div>
-          {error ? <>
-            <p>{language === "en" ? "An error has occurred. Please try again." : "Bir hata meydana geldi. Lütfen tekrar deneyin."}</p>
-
-          </>
-            :
-            <>
-              <p>{language === "en" ? "Your image is being prepared. The processing time may vary depending on system load." : "Resminiz hazırlanıyor, bu işlemin süresi sistemin yoğunluğuna göre değişiklik gösterebilir."}</p>
-            </>}
+          <p>{errorCode ? t(aiErrorKey(errorCode)) : t("imagePreparing")}</p>
         </div>
       }
-    </div >
+    </div>
   )
 }
 

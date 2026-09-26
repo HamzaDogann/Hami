@@ -1,35 +1,36 @@
-//React Hooks
-import { createContext, useContext, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 
-export const ModalContext = createContext();
+import Modal from '../components/ModalComponent/Modal';
 
-const ModalProvider = ({ children }) => {
-    const [showModal, setShowModal] = useState({
-        show: false,
-        content: '',
-    });
+const ModalContext = createContext(null);
 
-    const toggleModal = (show, content) => {
-        setShowModal({
-            show: show,
-            content: content,
-        });
+const ALERT_DURATION_MS = 3750;
 
-        setTimeout(() => {
-            setShowModal({ show: false, content: '' });
-        }, 3750);
-    };
+// Shows a short-lived alert message. The alert itself is rendered here, so pages only call showAlert().
+export const ModalProvider = ({ children }) => {
+    const [content, setContent] = useState('');
+    const timerRef = useRef(null);
+
+    const showAlert = useCallback((message) => {
+        clearTimeout(timerRef.current);
+        setContent(message);
+        timerRef.current = setTimeout(() => setContent(''), ALERT_DURATION_MS);
+    }, []);
+
+    useEffect(() => () => clearTimeout(timerRef.current), []);
+
+    const value = useMemo(() => ({ showAlert }), [showAlert]);
 
     return (
-        <ModalContext.Provider value={{ showModal, toggleModal }}>
+        <ModalContext.Provider value={value}>
             {children}
+            {content && <Modal content={content} />}
         </ModalContext.Provider>
     );
 };
 
-const useModal = () => {
+export const useModal = () => {
     const context = useContext(ModalContext);
+    if (!context) throw new Error('useModal must be used inside <ModalProvider>');
     return context;
 };
-
-export { ModalProvider, useModal };

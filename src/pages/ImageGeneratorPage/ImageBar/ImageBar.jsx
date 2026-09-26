@@ -1,24 +1,17 @@
-//Providers
-import { useContext } from "react";
-import { AImageContext } from "../../../providers/AImageContext.jsx";
+import { useAIImage } from "../../../providers/AImageContext.jsx";
 
-//Components
-import StockImages from "../ImageBar/ImageBarComponents/StockImages.jsx";
-import GeneratedImage from "../ImageBar/ImageBarComponents/GeneratedImage.jsx"
+import StockImages from "./ImageBarComponents/StockImages.jsx";
+import GeneratedImage from "./ImageBarComponents/GeneratedImage.jsx"
 
-//Styles
 import "./ImageBar.css";
 
-
 const ImageBar = () => {
-  const { showResult } = useContext(AImageContext)
-  return (
-    <>
-      <div className="image-bar-box">
-        {showResult ? <GeneratedImage /> : <StockImages />}
-      </div>
+  const { showResult } = useAIImage();
 
-    </>
+  return (
+    <div className="image-bar-box">
+      {showResult ? <GeneratedImage /> : <StockImages />}
+    </div>
   )
 }
 

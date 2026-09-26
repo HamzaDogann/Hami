@@ -1,64 +1,39 @@
-
-//React Hooks
-import React, { useContext } from 'react'
-
-//React Router
 import { useNavigate } from 'react-router-dom'
 
-//Providers
 import { useLanguage } from '../../../providers/LanguageContext';
-import { AImageContext } from '../../../providers/AImageContext';
+import { useFavImages } from '../../../providers/FavoriteImagesContext';
+import { useConfirm } from '../../../providers/ConfirmContext';
 import { useTheme } from '../../../providers/ThemeContext';
 
-//Styles - Icons
 import { BsStars } from "react-icons/bs";
 import { MdDeleteSweep } from "react-icons/md";
 import { MdImageSearch } from "react-icons/md";
 
-
-
 const NavComponent = () => {
-  const { language } = useLanguage();
-  const { darkMode } = useTheme();
+  const { t } = useLanguage();
+  const { isLightTheme } = useTheme();
   const navigate = useNavigate();
+  const { confirm } = useConfirm();
+  const { favImages, clearFavImages, searchText, setSearchText } = useFavImages();
 
-  const { deleteAllFavImages, setPopup, favImages, setInputText } = useContext(AImageContext);
+  const hasFavImages = favImages.length > 0;
+  const inputColors = !isLightTheme ? "bg-[#242424e7] text-[#dcdcdc]" : "bg-[#dddddde7] text-[#222222]";
 
-  //Delete All Favorite Images
-  const DeleteAllImages = () => {
-    deleteAllFavImages();
-  }
-
-  const handleDeleteAllFavorites = () => {
-    setPopup((prevState) => ({
-      ...prevState,
-      show: true,
-      content: `${language === "en" ? "Are you sure to delete all favorites" : "Bütün favoriler silinmek üzere"}`,
-      function: DeleteAllImages
-    }));
-  }
-
-  //Generate Button Method
-  const handleGenerateButton = () => {
-    setInputText("");
-    navigate("/image-generator");
-  }
-
-  const handleInputChange = (e) => {
-    setInputText(e.target.value);
+  const handleDeleteAll = () => {
+    confirm({ content: t("deleteAllImagesConfirm"), onConfirm: clearFavImages });
   };
 
-  //Favorite Images Length
-  const hasFavImages = favImages.length > 0;
+  const handleGenerate = () => {
+    setSearchText("");
+    navigate("/image-generator");
+  };
 
   return (
     <div className='nav-flex'>
       {/* Generate Image Box */}
       <div className='generate-image-box'>
-        <button
-          onClick={handleGenerateButton}
-          className='generate-new-image relative'>
-          <span>{language === "en" ? "Generate Image" : "Resim Oluştur"}</span>
+        <button onClick={handleGenerate} className='generate-new-image relative'>
+          <span>{t("generateImage")}</span>
           <BsStars className='ml-2 text-[24px]' />
         </button>
       </div>
@@ -66,9 +41,11 @@ const NavComponent = () => {
       {/* SearchBar Box */}
       <div className='search-bar-box'>
         <input
-          onChange={handleInputChange}
-          className={`search-input ${!darkMode ? "bg-[#242424e7] text-[#dcdcdc]" : "bg-[#dddddde7] text-[#222222]"}`} placeholder={`${language === "en" ? "Search in favorites..." : "Favorilerde ara..."}`}></input>
-         <button className={`find-image-button ${!darkMode ? "bg-[#242424e7] text-[#dcdcdc]" : "bg-[#dddddde7] text-[#3f3f3f]"}`}>
+          value={searchText}
+          onChange={(event) => setSearchText(event.target.value)}
+          className={`search-input ${inputColors}`}
+          placeholder={t("searchFavorites")} />
+        <button className={`find-image-button ${inputColors}`}>
           <MdImageSearch />
         </button>
       </div>
@@ -77,10 +54,10 @@ const NavComponent = () => {
       <div className='delete-all-images-box'>
         <button
           disabled={!hasFavImages}
-          onClick={handleDeleteAllFavorites}
+          onClick={handleDeleteAll}
           className={`delete-all-image ${hasFavImages ? 'active-button' : 'enabled-button'}`}
         >
-          <span>{language === "en" ? "Delete All Images" : "Bütün Resimleri Sil"}</span>
+          <span>{t("deleteAllImages")}</span>
           <MdDeleteSweep className='ml-1 text-[26px]' />
         </button>
       </div>

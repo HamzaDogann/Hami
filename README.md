@@ -26,7 +26,7 @@
 - Tailwind CSS
 
 ### 🔧 Dependencies in the project
-- google/generative-ai: ^0.3.0,
+- @huggingface/inference: ^4.13.30,
 - react: ^18.2.0,
 - react-dom: ^18.2.0,
 - react-icons: ^5.0.1,
@@ -35,6 +35,38 @@
 - react-syntax-highlighter: ^15.5.0
 
   
+### 🤖 AI setup (Hugging Face)
+
+Text and images are generated through [Hugging Face Inference Providers](https://huggingface.co/docs/inference-providers). Requests go through two Netlify Functions (`netlify/functions/chat.mjs`, `image.mjs`), so the token is never exposed to the browser.
+
+- Text: `openai/gpt-oss-120b` (fallbacks `openai/gpt-oss-20b`, `google/gemma-4-31B-it`)
+- Images: `black-forest-labs/FLUX.1-schnell` (fallbacks: fal-ai FLUX.1-schnell, `Tongyi-MAI/Z-Image-Turbo`)
+
+1. Create a fine-grained token with **"Make calls to Inference Providers"** at https://huggingface.co/settings/tokens/new?tokenType=fineGrained
+2. Local: copy `.env.example` to `.env` and set `HF_TOKEN`, then `npm run dev`. Check everything with `npm run check:ai`.
+3. Netlify: Site settings → Environment variables → add `HF_TOKEN`.
+
+### 🗂️ Project structure
+
+```
+netlify/functions/   chat.mjs, image.mjs  -> Hugging Face calls (token stays server-side)
+src/config/          browser clients for the two functions + AIError
+src/providers/       one context per concern: language, theme, user, alerts, confirm popup,
+                     favorite chats, favorite images, AI chat, AI image generation
+src/i18n/            all UI text (en / tr) - add new text here, use t("key") in components
+src/utils/           localStorage access, markdown -> plain text, image download helpers
+src/hooks/           small reusable hooks
+src/components/      shared UI (page layouts, confirm popup, markdown renderer, route guard)
+src/pages/           one folder per page
+```
+
+### ✅ Commands
+
+- `npm run dev` - start locally (functions included)
+- `npm run lint` - ESLint, must report 0 problems
+- `npm test` - unit tests + full-app smoke tests (AI calls are mocked)
+- `npm run check:ai` - real call to Hugging Face with your `HF_TOKEN`
+
 ### 🔹 React Hooks used in the project
 - useState
 - useEffect

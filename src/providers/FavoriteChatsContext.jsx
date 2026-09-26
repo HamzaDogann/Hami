@@ -1,64 +1,56 @@
+import { createContext, useCallback, useContext, useMemo, useState } from 'react';
 
-//React Hooks
-import React, { createContext, useContext, useState, useCallback } from 'react';
+import { STORAGE_KEYS, readJSON, writeJSON } from '../utils/storage';
 
-const FavChatsContext = createContext();
+const FavChatsContext = createContext(null);
 
-//Get Existing Favorite Chats
-const getExistingFavChats = () => {
-    const existingFavChats = localStorage.getItem("favChats");
-    if (existingFavChats) {
-        return JSON.parse(existingFavChats);
-    } else {
-        return [];
-    }
+const getStoredChats = () => {
+    const chats = readJSON(STORAGE_KEYS.favChats, []);
+    return Array.isArray(chats) ? chats : [];
 };
 
-//Is Unique?
-const isUniqueFavChat = (newFavChat, existingFavChats) => {
-    return !existingFavChats.some((chat) => chat.title === newFavChat.title && chat.texts === newFavChat.texts);
-};
+const DATE_FORMAT = { day: '2-digit', month: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit', hour12: false };
 
 export const FavChatsProvider = ({ children }) => {
 
-    const [favChats, setFavChats] = useState(() => getExistingFavChats());
-    const [selectedChatModal, setSelectedChatModal] = useState("");
+    const [favChats, setFavChats] = useState(getStoredChats);
+    const [selectedChat, setSelectedChat] = useState(null);
 
-    //Set New Favorite Chat
-    const setNewFavChat = useCallback((title, texts) => {
-        const savedDate = new Date();
-        const options = {
-            day: "2-digit",
-            month: "numeric",
-            year: "numeric",
-            hour: "numeric",
-            separator: "-",
-            hour12: false,
-            minute: "2-digit",
-        };
-        const formattedDate = savedDate.toLocaleDateString(undefined, options);
+    // Every change goes through here so state and storage never drift apart.
+    const commit = useCallback((chats) => {
+        writeJSON(STORAGE_KEYS.favChats, chats);
+        setFavChats(chats);
+    }, []);
 
-        const newFavChat = {
-            id: Date.now(),
-            title,
-            texts,
-            date: formattedDate,
-        };
+    // Returns false when this exact chat is already a favorite.
+    const addFavChat = useCallback((title, texts) => {
+        if (favChats.some((chat) => chat.title === title && chat.texts === texts)) return false;
 
-        if (isUniqueFavChat(newFavChat, favChats)) {
-            const updatedFavChats = [...favChats, newFavChat];
-            localStorage.setItem("favChats", JSON.stringify(updatedFavChats));
-            setFavChats(updatedFavChats);
-        }
-    }, [favChats]);
+        const newChat = { id: Date.now(), title, texts, date: new Date().toLocaleString(undefined, DATE_FORMAT) };
+        commit([...favChats, newChat]);
+        return true;
+    }, [favChats, commit]);
 
-    return (
-        <FavChatsContext.Provider value={{ favChats, setNewFavChat, setFavChats, selectedChatModal, setSelectedChatModal }}>
-            {children}
-        </FavChatsContext.Provider>
+    const removeFavChat = useCallback((id) => {
+        commit(favChats.filter((chat) => chat.id !== id));
+        setSelectedChat((current) => (current?.id === id ? null : current));
+    }, [favChats, commit]);
+
+    const clearFavChats = useCallback(() => {
+        commit([]);
+        setSelectedChat(null);
+    }, [commit]);
+
+    const value = useMemo(
+        () => ({ favChats, addFavChat, removeFavChat, clearFavChats, selectedChat, setSelectedChat }),
+        [favChats, addFavChat, removeFavChat, clearFavChats, selectedChat]
     );
+
+    return <FavChatsContext.Provider value={value}>{children}</FavChatsContext.Provider>;
 };
 
 export const useFavChat = () => {
-    return useContext(FavChatsContext);
+    const context = useContext(FavChatsContext);
+    if (!context) throw new Error('useFavChat must be used inside <FavChatsProvider>');
+    return context;
 };

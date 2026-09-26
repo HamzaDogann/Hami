@@ -1,90 +1,44 @@
-//React Hooks
-import { useState, useEffect } from "react"
+import { useEffect, useState } from "react"
 
-//Providers
 import { useLanguage } from "../../../providers/LanguageContext";
-//Component
 import HamiLogo from '../../../components/HamiLogo';
 
+// Intro animation: what is on screen from each point in time (ms).
+const INTRO_TIMELINE = [
+    { at: 1600, stage: "none" },
+    { at: 2200, stage: "loginInfoTitle" },
+    { at: 4200, stage: "none" },
+    { at: 4800, stage: "loginInfoReady" },
+    { at: 7200, stage: "none" },
+    { at: 7600, stage: "loginInfoStart" },
+    { at: 11400, stage: "none" },
+    { at: 12200, stage: "done" },
+];
 
-const HamiLogoAndInfos = ({ setIsLoginBox }) => {
+const HamiLogoAndInfos = ({ onIntroFinished }) => {
 
-    const { language } = useLanguage();
-
-    //Animation States
-    const [isHamiLogo, setIsHamiLogo] = useState(false);
-    const [isHamiInfo, setIsHamiInfo] = useState(false);
-    const [isHamiInfo2, setIsHamiInfo2] = useState(false);
-    const [isHamiInfo3, setIsHamiInfo3] = useState(false);
-    const [isLoginHamiLogo, setIsLoginHamiLogo] = useState(false);
+    const { t } = useLanguage();
+    const [stage, setStage] = useState("logo");
 
     useEffect(() => {
-        setIsHamiLogo(true);
+        const timers = INTRO_TIMELINE.map(({ at, stage }) => setTimeout(() => setStage(stage), at));
+        return () => timers.forEach(clearTimeout);
+    }, []);
 
-        setTimeout(() => {
-            setIsHamiLogo(false);
-        }, 1600);
+    useEffect(() => {
+        if (stage === "done") onIntroFinished();
+    }, [stage, onIntroFinished]);
 
-        setTimeout(() => {
-            setIsHamiInfo(true)
-        }, 2200);
-
-
-        setTimeout(() => {
-            setIsHamiInfo(false)
-        }, 4200);
-
-        setTimeout(() => {
-            setIsHamiInfo2(true);
-        }, 4800);
-
-        setTimeout(() => {
-
-            setIsHamiInfo2(false);
-        }, 7200);
-
-        setTimeout(() => {
-
-            setIsHamiInfo3(true);
-        }, 7600);
-
-        setTimeout(() => {
-
-            setIsHamiInfo3(false);
-        }, 11400);
-
-        setTimeout(() => {
-            setIsLoginHamiLogo(true);
-            setIsLoginBox(true);
-        }, 12200);
-
-    }, [])
+    const isInfoStage = stage.startsWith("loginInfo");
 
     return (
         <>
             <div className="hami-logo-box">
-                {isHamiLogo &&
-                    <HamiLogo />
-                }
-                {isHamiInfo &&
-                    <p className={`hami-login-info`}>
-                        {language === "en" ? "Text and Image Generator" : "Yazı ve Resim Üretici"}
-                    </p>
-                }
-                {isHamiInfo2 &&
-                    <p className="hami-login-info">
-                        {language === "en" ? "Are you ready for a great AI experience?" : "Harika bir yapay zeka deneyimine hazır mısın?"}
-                    </p>
-                }
-                {isHamiInfo3 &&
-                    <p className="hami-login-info">  
-                        {language === "en" ? "Start by choosing a username and avatar" : "Bir kullanıcı adı ve avatar seçerek başla"}
-                    </p>
-
-                }
+                {stage === "logo" && <HamiLogo />}
+                {isInfoStage && <p className="hami-login-info">{t(stage)}</p>}
             </div>
 
-            {isLoginHamiLogo &&
+            {stage === "done" &&
                 <div className="hami-logo-box">
                     <HamiLogo />
                 </div>

@@ -1,76 +1,77 @@
-//React Hooks
-import { createContext, useState } from "react";
+import { createContext, useCallback, useContext, useMemo, useState } from "react";
 
-//Providers
 import { useLanguage } from "./LanguageContext";
-
-//Configuration
 import runChat from "../config/ChatGenerator";
+import { aiErrorKey } from "../i18n/translations";
 
-export const AIContext = createContext();
+const AIChatContext = createContext(null);
 
+export const AIChatProvider = ({ children }) => {
 
-const AIChatContextProvider = (props) => {
-
-    const { language } = useLanguage();
-    const errorMessage = language === "en" ? "An error occurred. Try refreshing the page" : "Bir hata meydana geldi sayfayı yenilemeyi deneyin";
+    const { language, t } = useLanguage();
 
     const [input, setInput] = useState("");
     const [recentPrompt, setRecentPrompt] = useState("");
     const [showResult, setShowResult] = useState(false);
     const [loading, setLoading] = useState(false);
-    const [resultData, setResultData] = useState("empty");
-    const [dislike, setDislike] = useState(false);
-    const [like, setLike] = useState(false);
-    const [heart, setHeart] = useState(false);
-    const [activeFavChat, setActiveFavChat] = useState("");
+    const [resultData, setResultData] = useState("");
+    const [hasError, setHasError] = useState(false);
 
-    const onSent = async (prompt) => {
+    // Feedback / favorite marks for the current answer
+    const [liked, setLiked] = useState(false);
+    const [disliked, setDisliked] = useState(false);
+    const [favorited, setFavorited] = useState(false);
+
+    const sendPrompt = useCallback(async () => {
+        const prompt = input.trim();
+        if (!prompt || loading) return;
+
         setInput("");
+        setRecentPrompt(prompt);
         setResultData("");
-        setDislike(false);
-        setLike(false);
-        setHeart(false);
-        setLoading(true);
+        setHasError(false);
+        setLiked(false);
+        setDisliked(false);
+        setFavorited(false);
         setShowResult(true);
-        setRecentPrompt(input);
+        setLoading(true);
+
         try {
-            const response = await runChat(input);
-            setActiveFavChat(response);
-            setResultData(response);
+            setResultData(await runChat(prompt, language));
         } catch (error) {
-            setResultData(errorMessage);
+            setHasError(true);
+            setResultData(t(aiErrorKey(error.code)));
+        } finally {
+            setLoading(false);
         }
-        setLoading(false);
-        setInput("");
-    };
+    }, [input, loading, language, t]);
 
+    // Back to the welcome screen (ignored while an answer is still loading).
+    const startNewChat = useCallback(() => {
+        if (!loading) setShowResult(false);
+    }, [loading]);
 
-    const aiContextValue = {
-        recentPrompt,
-        setRecentPrompt,
-        onSent,
-        showResult,
-        setShowResult,
-        loading,
-        resultData,
-        input,
-        setInput,
-        dislike,
-        setDislike,
-        like,
-        setLike,
-        activeFavChat,
-        setActiveFavChat,
-        heart,
-        setHeart,
-    }
+    const toggleLike = useCallback(() => {
+        setLiked((current) => !current);
+        setDisliked(false);
+    }, []);
 
-    return (
-        <AIContext.Provider value={aiContextValue}>
-            {props.children}
-        </AIContext.Provider>
-    )
-}
+    const toggleDislike = useCallback(() => {
+        setDisliked((current) => !current);
+        setLiked(false);
+    }, []);
 
-export default AIChatContextProvider;
+    const value = useMemo(() => ({
+        input, setInput, recentPrompt, showResult, loading, resultData, hasError,
+        liked, disliked, favorited, setFavorited,
+        sendPrompt, startNewChat, toggleLike, toggleDislike,
+    }), [input, recentPrompt, showResult, loading, resultData, hasError, liked, disliked, favorited, sendPrompt, startNewChat, toggleLike, toggleDislike]);
+
+    return <AIChatContext.Provider value={value}>{children}</AIChatContext.Provider>;
+};
+
+export const useAIChat = () => {
+    const context = useContext(AIChatContext);
+    if (!context) throw new Error("useAIChat must be used inside <AIChatProvider>");
+    return context;
+};

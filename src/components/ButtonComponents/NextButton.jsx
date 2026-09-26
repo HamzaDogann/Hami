@@ -1,23 +1,18 @@
-//Providers
 import { useLanguage } from '../../providers/LanguageContext';
 
-// Style
 import { HiArrowRight } from "react-icons/hi";
 import "./nextButton.css"
 
-const NextButton = ({ handleUserUpdate }) => {
+const NextButton = ({ onClick }) => {
 
-    const { language } = useLanguage();
+    const { t } = useLanguage();
 
     return (
-        <>
-            <button
-                onClick={handleUserUpdate}
-                className={`next-btn mt-6 bg-blue-700 text-white`}>
-                <span>{language === "en" ? "Next" : "İlerle"}</span>
-                <HiArrowRight id="btn-arrow" />
-            </button>
-        </>
+        <button onClick={onClick} className="next-btn mt-6 bg-blue-700 text-white">
+            <span>{t("next")}</span>
+            <HiArrowRight id="btn-arrow" />
+        </button>
     );
 };
-export default NextButton
+
+export default NextButton;

@@ -1,4 +1,3 @@
-// Avatars.js
 import Avatar1 from '../../assets/AvatarImages/Avatar1.png';
 import Avatar2 from '../../assets/AvatarImages/Avatar2.png';
 import Avatar3 from '../../assets/AvatarImages/Avatar3.png';
@@ -24,3 +23,6 @@ const Avatars = [
 ];
 
 export default Avatars;
+
+
+export const getAvatarById = (id) => Avatars.find((avatar) => avatar.id === id);
